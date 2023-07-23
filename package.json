@@ -2,10 +2,16 @@
   "name": "adminserver",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
+    "start": "node dist/main.js",
+    "build": "npx tsc --project tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^5.1.6"
+  }
 }
