@@ -6,15 +6,15 @@ import { CreateDBPool } from './config/db.js';
 import { ConnectRedis } from './config/redis.js';
 import { router } from './routes/index.js';
 
-const __dirname = path.resolve();
+export const __dirname = path.resolve();
 
 
 const app = express();
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, './src/views'));
+// app.set("view engine", "ejs");
+// app.set("views", path.join(__dirname, './src/views'));
 
-app.use(express.static(path.join(__dirname, '/src/public')));
+app.use( express.static(path.join(__dirname, '/src/public')));
 app.use( express.json());
 app.use( express.urlencoded({extended:true}));
 
