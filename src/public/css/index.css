@@ -4,6 +4,11 @@ label {
     padding: 0.2em 0.4em;
 }
 
+th {
+  border : 1px solid #92acbb; 
+  padding : 3px;     
+}
+
 [type="radio"],
 span {
     vertical-align: middle;
@@ -60,7 +65,14 @@ span {
     visibility: hidden;
   }
 
-  .th {
+  
+  .td {
     border : 1px solid #92acbb; 
     padding : 3px;     
+  }
+
+  .modal_close_btn{
+    font-size: 18px;
+    line-height: 2rem;
+    padding: 0.2em 0.4em;
   }

@@ -8,5 +8,8 @@ router.get('/', main.home );
 
 
 router.put('/rank/user/init', rank.initUserRealtimeRank);
-router.put('/rank/user/all', rank.getUserRankAll )
+router.put('/rank/user/all', rank.getUserRankAll );
 router.put('/rank/user/search', rank.getUserRank );
+
+router.delete('/rank/user', rank.deleteUserRank );
+router.put('/rank/user', rank.updateUserRankScore );

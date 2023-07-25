@@ -27,7 +27,6 @@ export async function ConnectRedis(){
       console.log('redis disconnected');
    });
 
-
    await redisCli.connect()
 
    return redisCli.v4;

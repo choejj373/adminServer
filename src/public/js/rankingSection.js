@@ -1,11 +1,69 @@
 
 document.getElementById("searchUserRankBtn").addEventListener("click", searchUserRank );
 document.getElementById("initUserRankBtn").addEventListener("click", initUserRealtimeRank)
+document.getElementById('deleteUserRankBtn').addEventListener("click", deleteUserRank);
+
+document.getElementById('updateUserRankScoreBtn').addEventListener('click', updateUserRankScore );
 
 const getUserRankAllBtn  = document.getElementById("getUserRankAllBtn");
 getUserRankAllBtn.setAttribute("startPos","0")
 getUserRankAllBtn.addEventListener("click", viewUserRankAll )
 
+function updateUserRankScore(){
+    const nameElement   = document.getElementById('userRankName')
+    const scoreElement  = document.getElementById('newUserRankScore')
+
+    const userName = nameElement.value;
+    const newScore = Number( scoreElement.value );
+
+    console.log( userName );
+    console.log( newScore );
+
+    if( newScore === 0 )
+        return;
+
+    const url = '/rank/user';
+
+    fetch( url, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify( {
+            key : "userRank",
+            score : newScore,
+            name : userName
+        } )
+    })
+    .then((res) => res.json())
+    .then( (res)=>{
+        scoreElement.value = "";
+        hideModal();
+    })
+    .catch(console.log)
+}
+
+function deleteUserRank(event){
+    const userName = event.target.getAttribute("userName")
+    const url = '/rank/user';
+
+    fetch( url, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify( {
+            key : "userRank",
+            name : userName
+        } )
+    })
+    .then((res) => res.json())
+    .then( (res)=>{
+        event.target.setAttribute("userName","")
+        hideModal();
+    })
+    .catch(console.log)
+}
 function initUserRealtimeRank(){
     const url = '/rank/user/init';
     fetch( url, {
@@ -24,38 +82,9 @@ function initUserRealtimeRank(){
     .catch(console.log)
 }
 
-function createModalByUserRankAll( startPos, maxCount, rows ){
-    const modalLayer = document.querySelector('.modal'); // 모달 윈도우
-    modalLayer.replaceChildren();
-
-    const txt = document.createElement("text");
-    txt.innerText = "전체 유저 랭킹"
-    modalLayer.appendChild( txt );
-
-    let closeBtn = document.createElement("button");
-    closeBtn.innerText = "Close";
-    closeBtn.addEventListener( 'click', hideModal );
-    modalLayer.appendChild( closeBtn );
-
-    const table = document.createElement( "TABLE" ); 
-    let tr = document.createElement( "TR" ); 
-
-    let th = document.createElement( "TH" ); 
-    th.innerHTML = "rank"; 
-    th.classList.add( 'th' )
-    tr.appendChild( th ); 
-
-    th = document.createElement( "TH" ); 
-    th.innerHTML = "name"; 
-    th.classList.add( 'th' )
-    tr.appendChild( th ); 
-
-    th = document.createElement( "TH" ); 
-    th.innerHTML = "score"; 
-    th.classList.add( 'th' )
-    tr.appendChild( th ); 
-
-    table.appendChild( tr ); 
+function updateModalByUserRankAll( startPos, maxCount, rows ){
+    const userRankTable = document.getElementById( "userRankTable" ); 
+    userRankTable.replaceChildren();
 
     for( let i = 0; i < rows.length; i++){
         tr = document.createElement( "TR" ); 
@@ -63,31 +92,31 @@ function createModalByUserRankAll( startPos, maxCount, rows ){
         let td = document.createElement( "TD" ); 
         td.innerHTML = startPos + i + 1; 
         td.classList.add( 'td' )
+        td.setAttribute('width', '20%');
         tr.appendChild( td ); 
 
         td = document.createElement( "TD" ); 
         td.innerHTML = rows[i].value; 
+        td.setAttribute('width', '60%');
         td.classList.add( 'td' )
         tr.appendChild( td ); 
     
         td = document.createElement( "TD" ); 
         td.innerHTML = rows[i].score; 
+        td.setAttribute('width', '20%');
         td.classList.add( 'td' )
         tr.appendChild( td ); 
 
-        table.appendChild( tr ); 
+        userRankTable.appendChild( tr ); 
     }
 
-    modalLayer.appendChild( table );
-
-    const prevBtn = document.createElement("button");
-    prevBtn.innerText = "Prev";
-    modalLayer.appendChild( prevBtn );
+    const prevBtn = document.getElementById("prevBtn");
     if( startPos > 0 ){
         let pos = startPos - rows.length;
         if( pos < 0 ){
             pos = 0;
         }
+        prevBtn.removeAttribute('disabled');
         prevBtn.setAttribute("startPos",String(pos) );
         prevBtn.addEventListener( 'click', viewUserRankAll );
     }else{
@@ -96,12 +125,10 @@ function createModalByUserRankAll( startPos, maxCount, rows ){
 
 
 
-    const nextBtn = document.createElement("button");
-    nextBtn.innerText = "Next";
-    modalLayer.appendChild( nextBtn );
-
+    const nextBtn = document.getElementById("nextBtn");    
     if( maxCount > rows.length + startPos ){
         const pos = startPos + rows.length;
+        nextBtn.removeAttribute('disabled');
         nextBtn.setAttribute("startPos",String(pos) );
         nextBtn.addEventListener( 'click', viewUserRankAll );
     }else{
@@ -129,85 +156,35 @@ function viewUserRankAll( event ){
     .then((res) => res.json())
     .then( (res)=>{
         console.log( res.zRange );
-        createModalByUserRankAll( startPos, res.zCard, res.zRange );
-        showModal();
+        updateModalByUserRankAll( startPos, res.zCard, res.zRange );
+        showModal('modalUserRankAll');
     })
     .catch(console.log)
 
 }
 
 
-function createModalByUserRank( name, rank, score ){
-    const modalLayer = document.querySelector('.modal'); // 모달 윈도우
-    modalLayer.replaceChildren();
+function updateModalByUserRank( name, rank, score ){
+  
+    let txt = document.getElementById("userRankName");
+    txt.value = name;
 
-    let txt = document.createElement("text");
-    txt.innerText = "유저 랭킹 정보"
-    modalLayer.appendChild( txt );
+    txt = document.getElementById("userRankRank");
+    txt.value = rank;
 
-    let closeBtn = document.createElement("button");
-    closeBtn.innerText = "Close";
-    closeBtn.addEventListener( 'click', hideModal );
-    modalLayer.appendChild( closeBtn );
+    txt = document.getElementById("userRankScore");
+    txt.value = score;
 
-
-    let div = document.createElement("div");
-    modalLayer.appendChild( div );
-
-    txt = document.createElement("label");
-    txt.innerText = "이름";
-    div.appendChild( txt );
-
-    txt = document.createElement("text");
-    txt.innerText = name;
-    div.appendChild( txt );    
-
-
-    txt = document.createElement("label");
-    txt.innerText = "랭크";
-    div.appendChild( txt );    
-
-    txt = document.createElement("text");
-    txt.innerText = rank;
-    div.appendChild( txt );        
-
-    txt = document.createElement("label");
-    txt.innerText = "스코어";
-    div.appendChild( txt );            
-
-    txt = document.createElement("text");
-    txt.innerText = score;
-    div.appendChild( txt );            
-
-
-
-    div = document.createElement("div");
-    modalLayer.appendChild( div );
-
-    const input = document.createElement("input");
-    input.setAttribute('placeholder',"유저 이름 입력")
-    div.appendChild( input );
-
-    const changeBtn = document.createElement("button");
-    changeBtn.innerText = "변경";
-    div.appendChild( changeBtn );
-// nextBtn.addEventListener( 'click', viewUserRankAll );
-
-
-    const prevBtn = document.createElement("button");
-    prevBtn.innerText = "삭제";
-    modalLayer.appendChild( prevBtn );
-    // prevBtn.addEventListener( 'click', viewUserRankAll );
-
-
-    
+    document.getElementById('deleteUserRankBtn').setAttribute('userName', name );
 }
 
 function searchUserRank(){
     const element = document.getElementById("searchUserRankName");
     console.log( element.value );
+    if( element.value === "")
+        return;
 
-    const url =  + element.value;
+
     fetch( '/rank/user/search', {
         method: "PUT",
         headers: {
@@ -221,8 +198,13 @@ function searchUserRank(){
     .then((res) => res.json())
     .then( (res)=>{
         console.log( res );
-        createModalByUserRank( element.value, res.zRank, res.zScore );
-        showModal();
+        if( res.zRank ){
+            updateModalByUserRank( element.value, res.zRank, res.zScore );
+            showModal('modalUserRank');
+        }else{
+            alert("Not Found User : " + element.value );
+        }
+
     })
     .catch(console.log)
 }

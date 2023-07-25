@@ -74,9 +74,46 @@
         <footer style="width:100%; height: 30px;border-bottom:1px solid gold; ">Footer 영역</footer>
     </div>
     <div class="modal__overlay hidden"></div>
-    <div class="modal hidden">
-          <!-- <h1>Modal</h1> -->
+    <div id="modalUserRankAll" class="modal hidden">
+          <h1>유저 전체 랭킹 리스트</h1>
+          <input class = "modal_close_btn" type="button" value="Close" />
+          <p>
+            <table width="500px" style="table-layout: fixed">
+                <tr>
+                    <th width="20%">Rank</th>
+                    <th width="60%">Name</th>
+                    <th width="20%">Score</th>
+                </tr>
+            </table>
+            <table id = "userRankTable" width="500px" style="table-layout: fixed">
+            </table>
+          </p>
+          <p>
+            <input id = "prevBtn" type="button" value="Prev" />
+            <input id = "nextBtn" type="button" value="Next" />
+          </p>
           <!-- <button class="modal__close">Close</button> -->
     </div>
+    <div id="modalUserRank" class="modal hidden">
+        <h1>유저 랭킹 정보</h1>
+        <input  class = "modal_close_btn" type="button" value="Close" /><br>
+        <p>
+            <label>이름</label>
+            <input id = "userRankName" type="text" /><br>
+            <label>랭크</label>
+            <input id = "userRankRank" type="text"/><br>
+            <label>스코어</label>
+            <input id = "userRankScore" type="text"/><br>
+        </p>
+        <p>
+            <input id="newUserRankScore" type="text" placeholder="스코어" />
+            <input id="updateUserRankScoreBtn" type="button" value="변경" />
+        </p>
+        <p>
+            <input id="deleteUserRankBtn" type="button" value="삭제" />
+        </p>
+        <!-- <button class="modal__close">Close</button> -->
+    </div>
+
 </body>
 </html>
