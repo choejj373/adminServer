@@ -90,7 +90,10 @@ function createModalByUserRankAll( startPos, maxCount, rows ){
         }
         prevBtn.setAttribute("startPos",String(pos) );
         prevBtn.addEventListener( 'click', viewUserRankAll );
+    }else{
+        prevBtn.setAttribute('disabled',true);
     }
+
 
 
     const nextBtn = document.createElement("button");
@@ -101,6 +104,8 @@ function createModalByUserRankAll( startPos, maxCount, rows ){
         const pos = startPos + rows.length;
         nextBtn.setAttribute("startPos",String(pos) );
         nextBtn.addEventListener( 'click', viewUserRankAll );
+    }else{
+        nextBtn.setAttribute('disabled',true);
     }
 
 
@@ -131,6 +136,73 @@ function viewUserRankAll( event ){
 
 }
 
+
+function createModalByUserRank( name, rank, score ){
+    const modalLayer = document.querySelector('.modal'); // 모달 윈도우
+    modalLayer.replaceChildren();
+
+    let txt = document.createElement("text");
+    txt.innerText = "유저 랭킹 정보"
+    modalLayer.appendChild( txt );
+
+    let closeBtn = document.createElement("button");
+    closeBtn.innerText = "Close";
+    closeBtn.addEventListener( 'click', hideModal );
+    modalLayer.appendChild( closeBtn );
+
+
+    let div = document.createElement("div");
+    modalLayer.appendChild( div );
+
+    txt = document.createElement("label");
+    txt.innerText = "이름";
+    div.appendChild( txt );
+
+    txt = document.createElement("text");
+    txt.innerText = name;
+    div.appendChild( txt );    
+
+
+    txt = document.createElement("label");
+    txt.innerText = "랭크";
+    div.appendChild( txt );    
+
+    txt = document.createElement("text");
+    txt.innerText = rank;
+    div.appendChild( txt );        
+
+    txt = document.createElement("label");
+    txt.innerText = "스코어";
+    div.appendChild( txt );            
+
+    txt = document.createElement("text");
+    txt.innerText = score;
+    div.appendChild( txt );            
+
+
+
+    div = document.createElement("div");
+    modalLayer.appendChild( div );
+
+    const input = document.createElement("input");
+    input.setAttribute('placeholder',"유저 이름 입력")
+    div.appendChild( input );
+
+    const changeBtn = document.createElement("button");
+    changeBtn.innerText = "변경";
+    div.appendChild( changeBtn );
+// nextBtn.addEventListener( 'click', viewUserRankAll );
+
+
+    const prevBtn = document.createElement("button");
+    prevBtn.innerText = "삭제";
+    modalLayer.appendChild( prevBtn );
+    // prevBtn.addEventListener( 'click', viewUserRankAll );
+
+
+    
+}
+
 function searchUserRank(){
     const element = document.getElementById("searchUserRankName");
     console.log( element.value );
@@ -149,6 +221,8 @@ function searchUserRank(){
     .then((res) => res.json())
     .then( (res)=>{
         console.log( res );
+        createModalByUserRank( element.value, res.zRank, res.zScore );
+        showModal();
     })
     .catch(console.log)
 }

@@ -3,7 +3,7 @@ import express from 'express';
 import path from 'path';
 
 import { CreateDBPool } from './config/db.js';
-import { ConnectRedis } from './config/redis.js';
+// import { ConnectRedis } from './config/redis.js';
 import { router } from './routes/index.js';
 
 export const __dirname = path.resolve();
@@ -23,7 +23,7 @@ app.use('/', router );
 const PORT = process.env.PORT || 4000;
 
 CreateDBPool();
-ConnectRedis();
+//ConnectRedis();
 
 app.listen(PORT, () =>{
     console.log("서버 가동 : ", PORT);
