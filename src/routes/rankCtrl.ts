@@ -2,28 +2,37 @@
 import { Request, Response } from 'express';
 import { ConnectRedis } from '../config/redis.js'
 import { GetConnection, ReleaseConnection } from "../config/db.js"
-// import { RedisCommandArgument } from 'redis'
 
 export const rank = {
-    // pipeline& rdb에서 가져올때도 나누어서 가져와야 한다.
+
     initUserRealtimeRank : async ( req:Request, res:Response)=>{
         const connDB = await GetConnection();
         const redisCli = await ConnectRedis();
-        
+
         try{
 
-            const [rows]:any = await connDB.query("SELECT * FROM user;" );
+            const [result]:any = await connDB.query("SELECT COUNT(*) as cnt FROM user;" );
 
-            rows.forEach((user:any) => {
-                redisCli.zAdd( req.body.key, { score:user.money, value:user.name } );    
-            });
+            await redisCli.UNLINK( req.body.key );
+            
+            const maxOffset = result[0].cnt;
+            const countPerPage = 10;
+
+            for( let offset = 0;  offset < maxOffset ; offset += countPerPage ){
+
+                let [rows]:any = await connDB.query("SELECT * FROM user LIMIT ?, ?;",[ offset , countPerPage] );
+
+                rows.forEach((user:any) => {
+                    redisCli.zAdd( req.body.key, { score:user.money, value:user.name } );    
+                });
+            }
 
             res.json( {msg:"ok"} );
         }catch( err ){
             console.log( err );
             res.status(601).json( {msg:err} );
         }finally{
-            redisCli.quit();// zAdd가 다 끝나기 전에 quit?
+            redisCli.quit();
             ReleaseConnection( connDB );
         }
         
@@ -81,11 +90,7 @@ export const rank = {
         const redisCli = await ConnectRedis();
 
         try{
-            console.log(req.body.key);
-            console.log(req.body.score);
-            console.log(req.body.name);
 
-            //await redisCli.zAdd( req.body.key, req.body.score, req.body.name  );
             await redisCli.zAdd( req.body.key, { score:req.body.score, value:req.body.name  });
             res.json( {msg:"ok"} );
 

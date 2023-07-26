@@ -3,7 +3,9 @@ import redis from 'redis';
 
 export async function ConnectRedis(){
    const redisCli = redis.createClient({
-      url: `redis://:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}/0`
+      url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+      password:process.env.REDIS_PASSWORD,
+      database:0
    });
 
    redisCli.on('connect', () => {
@@ -19,14 +21,14 @@ export async function ConnectRedis(){
    });
 
    redisCli.on('reconnecting', () => {
-      console.log('redis reconnecting');
+      // console.log('redis reconnecting');
    });
 
    redisCli.on('end', () => {
       console.log('redis disconnected');
    });
 
-   await redisCli.connect()
+   await redisCli.connect();
 
    return redisCli;
 }
