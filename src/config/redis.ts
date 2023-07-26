@@ -3,8 +3,7 @@ import redis from 'redis';
 
 export async function ConnectRedis(){
    const redisCli = redis.createClient({
-      url: `redis://:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}/0`,
-      legacyMode: true, // 반드시 설정 !!
+      url: `redis://:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}/0`
    });
 
    redisCli.on('connect', () => {
@@ -29,9 +28,5 @@ export async function ConnectRedis(){
 
    await redisCli.connect()
 
-   return redisCli.v4;
+   return redisCli;
 }
-
- //async/await이 잘 동작 되려면 꼭 필요(?)
-// const redisCli = redisClient.v4;
-

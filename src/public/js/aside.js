@@ -5,8 +5,8 @@ document.querySelectorAll('input[name="left_menu"]').forEach((elem) => {
 
 function onClickedAsideMenu(){
 
-    const menu = ["#rankingMenu", "#userMenu", "#storeMenu", "#guildMenu" ];
-    const section = ["rankingSection", "userSection", "storeSection", "guildSection" ];
+    const menu = ["#rankingMenu", "#userMenu", "#mailMenu","#storeMenu", "#guildMenu" ];
+    const section = ["rankingSection", "userSection", "mailSection", "storeSection", "guildSection" ];
 
     for( let i =0; i < menu.length; ++i ){
         if( document.querySelector( menu[i]).checked ){

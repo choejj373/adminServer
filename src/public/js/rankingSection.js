@@ -82,7 +82,7 @@ function initUserRealtimeRank(){
     .catch(console.log)
 }
 
-function updateModalByUserRankAll( startPos, maxCount, rows ){
+function updateModalByUserRankAll( startPos, maxCount, rows, rowsPerPage ){
     const userRankTable = document.getElementById( "userRankTable" ); 
     userRankTable.replaceChildren();
 
@@ -112,7 +112,7 @@ function updateModalByUserRankAll( startPos, maxCount, rows ){
 
     const prevBtn = document.getElementById("prevBtn");
     if( startPos > 0 ){
-        let pos = startPos - rows.length;
+        let pos = startPos - rowsPerPage;
         if( pos < 0 ){
             pos = 0;
         }
@@ -127,7 +127,7 @@ function updateModalByUserRankAll( startPos, maxCount, rows ){
 
     const nextBtn = document.getElementById("nextBtn");    
     if( maxCount > rows.length + startPos ){
-        const pos = startPos + rows.length;
+        const pos = startPos + rowsPerPage;
         nextBtn.removeAttribute('disabled');
         nextBtn.setAttribute("startPos",String(pos) );
         nextBtn.addEventListener( 'click', viewUserRankAll );
@@ -156,7 +156,7 @@ function viewUserRankAll( event ){
     .then((res) => res.json())
     .then( (res)=>{
         console.log( res.zRange );
-        updateModalByUserRankAll( startPos, res.zCard, res.zRange );
+        updateModalByUserRankAll( startPos, res.zCard, res.zRange, 10 );
         showModal('modalUserRankAll');
     })
     .catch(console.log)
