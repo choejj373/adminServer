@@ -5,6 +5,7 @@ import { GetConnection, ReleaseConnection } from "../config/db.js"
 
 export const rank = {
 
+    //pipeline auto
     initUserRealtimeRank : async ( req:Request, res:Response)=>{
         const connDB = await GetConnection();
         const redisCli = await ConnectRedis();

@@ -2,6 +2,8 @@ label {
     font-size: 18px;
     line-height: 2rem;
     padding: 0.2em 0.4em;
+    display:inline-block;
+    width:120px;
 }
 
 th {
@@ -75,4 +77,16 @@ span {
     font-size: 18px;
     line-height: 2rem;
     padding: 0.2em 0.4em;
+  }
+
+  .tootip{
+    content: "";
+    position: absolute;    
+    display:none;
+    z-index:2000;
+    background: #00732c;
+    padding: 8px;
+    font-size: 1rem;
+    color: #fff;
+    border-radius: 2px;
   }
